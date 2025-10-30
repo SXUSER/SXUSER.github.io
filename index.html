@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>质控小课堂</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f0f5ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        /* 标题区域 */
+        .header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('banner.jpg'); /* 本地banner.jpg */
+            background-size: cover;
+            background-position: center;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            opacity: 0.9;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+        
+        /* 侧边目录 */
+        .sidebar {
+            flex: 0 0 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .sidebar-title {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4a6cf7;
+        }
+        
+        .sidebar-title h2 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .category {
+            margin-bottom: 20px;
+        }
+        
+        .category-title {
+            font-weight: 600;
+            padding: 10px 0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: #4a6cf7;
+            border-bottom: 1px dashed #e0e7ff;
+        }
+        
+        .category-title i {
+            margin-right: 10px;
+            color: #4a6cf7;
+        }
+        
+        .subcategories {
+            padding-left: 10px;
+        }
+        
+        .subcategory {
+            padding: 8px 15px;
+            margin: 5px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .subcategory i {
+            margin-right: 8px;
+            font-size: 0.9rem;
+            color: #4a6cf7;
+        }
+        
+        .subcategory:hover {
+            background: #f0f5ff;
+        }
+        
+        .subcategory.active {
+            background: #4a6cf7;
+            color: white;
+        }
+        
+        .subcategory.active i {
+            color: white;
+        }
+        
+        /* 主内容区 */
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 比例 */
+            height: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .video-info h2 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .video-description {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.7;
+            padding: 15px;
+            background: #f9faff;
+            border-radius: 8px;
+            border-left: 3px solid #4a6cf7;
+        }
+        
+        .video-meta {
+            display: flex;
+            gap: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .meta-item i {
+            color: #4a6cf7;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                flex: 1;
+                width: 100%;
+            }
+            
+            .header {
+                height: 180px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            max-width: 1200px;
+            margin: 20px auto 0;
+            border-top: 1px solid #eaeaea;
+        }
+    </style>
+</head>
+<body>
+    <!-- 标题区域 -->
+    <div class="header">
+        <h1><i class="fas fa-video"></i> 质控小课堂</h1>
+        <p>专业质量控制知识分享平台，助力质量提升</p>
+    </div>
+    
+    <div class="container">
+        <!-- 侧边目录 -->
+        <div class="sidebar">
+            <div class="sidebar-title">
+                <h2><i class="fas fa-book"></i> 课程目录</h2>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">
+                    <i class="fas fa-flask"></i>
+                    <span>订单类</span>
+                </div>
+                <div class="subcategories">
+                    <div class="subcategory active" data-video="qc-intro">
+                        <i class="fas fa-play-circle"></i> 订单受理
+                    </div>
+                    <div class="subcategory" data-video="qc-tools">
+                        <i class="fas fa-play-circle"></i> 订单揽收
+                    </div>
+                    <div class="subcategory" data-video="iso-standards">
+                        <i class="fas fa-play-circle"></i> 订单仲裁
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span>工单类</span>
+                </div>
+                <div class="subcategories">
+                    <div class="subcategory" data-video="spc">
+                        <i class="fas fa-play-circle"></i> 上报标准
+                    </div>
+                    <div class="subcategory" data-video="six-sigma">
+                        <i class="fas fa-play-circle"></i> 仲裁标准
+                    </div>
+                    <div class="subcategory" data-video="data-analysis">
+                        <i class="fas fa-play-circle"></i> 处理时效
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">
+                    <i class="fas fa-cogs"></i>
+                    <span>云呼类</span>
+                </div>
+                <div class="subcategories">
+                    <div class="subcategory" data-video="fmea">
+                        <i class="fas fa-play-circle"></i> 仲裁标准
+                    </div>
+                    <div class="subcategory" data-video="audit">
+                        <i class="fas fa-play-circle"></i> 呼入指引
+                    </div>
+                    <div class="subcategory" data-video="case-study">
+                        <i class="fas fa-play-circle"></i> 呼出指引
+                    </div>
+                </div>
+            </div>
+            
+            <div class="category">
+                <div class="category-title">
+                    <i class="fas fa-industry"></i>
+                    <span>损坏类</span>
+                </div>
+                <div class="subcategories">
+                    <div class="subcategory" data-video="medical">
+                        <i class="fas fa-play-circle"></i> 仲裁标准
+                    </div>
+                    <div class="subcategory" data-video="food">
+                        <i class="fas fa-play-circle"></i> 仲裁误区
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主内容区 -->
+        <div class="content">
+            <div class="video-container">
+                <video id="mainVideo" controls poster="poster.jpg"> <!-- 本地poster.jpg -->
+                    <source src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4" type="video/mp4"> <!-- 本地视频文件 -->
+                    您的浏览器不支持HTML5视频
+                </video>
+            </div>
+            
+            <div class="video-info">
+                <h2><i class="fas fa-file-alt"></i> 订单讲解</h2>
+                <p class="video-description">
+                    本课程介绍订单类受理规则。
+                </p>
+                <div class="video-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>2分钟</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>2023-09-15</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-eye"></i>
+                        <span>2,845次观看</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2025 质控小课堂 | 专业质控视频分享平台 | 内部学习资料 | 禁止外传</p>
+    </div>
+
+    <script>
+        // 视频数据
+        const videos = {
+            'qc-intro': {
+                title: "订单讲解",
+                description: "本课程介绍订单类受理规则。",
+                duration: "2分钟",
+                date: "2025-09-15",
+                views: "2,845",
+                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
+                poster: "poster.jpg"
+            },
+            'qc-tools': {
+                title: "订单揽收",
+                description: "本课程介绍订单类揽收规则。",
+                duration: "2分钟",
+                date: "2025-09-15",
+                views: "2,845",
+                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
+                poster: "poster.jpg"
+            },
+            'iso-standards': {
+                title: "订单仲裁",
+                description: "本课程介绍订单类仲裁规则。",
+                duration: "2分钟",
+                date: "2025-09-15",
+                views: "2,845",
+                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
+                poster: "poster.jpg"
+            },
+            'spc': {
+                title: "工单上报",
+                description: "本课程介绍工单上报规则。",
+                duration: "2分钟",
+                date: "2025-09-15",
+                views: "2,845",
+                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
+                poster: "poster.jpg"
+            },
+            'six-sigma': {
+                title: "仲裁标准",
+                description: "本课程介绍工单类仲裁标准规则。",
+                duration: "2分钟",
+                date: "2025-09-15",
+                views: "2,845",
+                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
+                poster: "poster.jpg"
+            },
+            'data-analysis': {
+                title: "处理时效",
+                description: "本课程介绍工单处理时效规则。",
+                duration: "2分钟",
+                date: "2025-09-15",
+                views: "2,845",
+                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
+                poster: "poster.jpg"
+            }
+        };
+        
+        // 处理目录点击事件
+        document.querySelectorAll('.subcategory').forEach(item => {
+            item.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.subcategory').forEach(el => {
+                    el.classList.remove('active');
+                });
+                
+                // 为当前点击项添加active类
+                this.classList.add('active');
+                
+                // 获取视频数据
+                const videoId = this.getAttribute('data-video');
+                const videoData = videos[videoId];
+                
+                if (videoData) {
+                    // 更新视频区域内容
+                    document.querySelector('.video-info h2').innerHTML = 
+                        `<i class="fas fa-file-alt"></i> ${videoData.title}`;
+                    document.querySelector('.video-description').textContent = videoData.description;
+                    
+                    // 更新视频元数据
+                    const metaItems = document.querySelectorAll('.meta-item');
+                    metaItems[0].innerHTML = `<i class="fas fa-clock"></i> <span>${videoData.duration}</span>`;
+                    metaItems[1].innerHTML = `<i class="fas fa-calendar-alt"></i> <span>${videoData.date}</span>`;
+                    metaItems[2].innerHTML = `<i class="fas fa-eye"></i> <span>${videoData.views}次观看</span>`;
+                    
+                    // 更新视频源
+                    const videoPlayer = document.getElementById('mainVideo');
+                    videoPlayer.src = videoData.file;
+                    videoPlayer.poster = videoData.poster;
+                    
+                    // 加载新视频
+                    videoPlayer.load();
+                }
+            });
+        });
+        
+        // 初始化视频播放器
+        const videoPlayer = document.getElementById('mainVideo');
+        videoPlayer.addEventListener('loadedmetadata', function() {
+            // 视频元数据加载完成
+        });
+    </script>
+</body>
+</html>
