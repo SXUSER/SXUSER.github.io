@@ -4,463 +4,1133 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>质控小课堂</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* 全局样式 */
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #6c757d;
+            --text-color: #343a40;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background: #f0f5ff;
-            color: #333;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text-color);
             line-height: 1.6;
+            display: grid;
+            grid-template-areas:
+                "header header header"
+                "sidebar content cards"
+                "footer footer footer";
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: auto 1fr auto;
+            min-height: 100vh;
         }
-        
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            gap: 20px;
-        }
-        
+
         /* 标题区域 */
-        .header {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('banner.jpg'); /* 本地banner.jpg */
-            background-size: cover;
-            background-position: center;
-            height: 220px;
+        header {
+            grid-area: header;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1rem 2rem;
+            color: var(--white);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            z-index: 10;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        h1 i {
+            margin-right: 0.8rem;
+            font-size: 1.5rem;
+        }
+
+        /* 侧边栏样式 */
+        .sidebar {
+            grid-area: sidebar;
+            background-color: var(--white);
+            padding: 1.5rem 1rem;
+            border-right: 1px solid var(--medium-gray);
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+        
+        .sidebar-container {
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            color: white;
-            margin-bottom: 20px;
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background-color: var(--light-gray);
         }
         
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        .search-box:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
         }
         
-        .header p {
-            font-size: 1.1rem;
-            max-width: 700px;
-            opacity: 0.9;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 15px;
-            border-radius: 20px;
-        }
-        
-        /* 侧边目录 */
-        .sidebar {
-            flex: 0 0 250px;
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        .sidebar-title {
-            text-align: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #4a6cf7;
-        }
-        
-        .sidebar-title h2 {
-            font-size: 1.4rem;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .category {
-            margin-bottom: 20px;
-        }
-        
-        .category-title {
-            font-weight: 600;
-            padding: 10px 0;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            color: #4a6cf7;
-            border-bottom: 1px dashed #e0e7ff;
-        }
-        
-        .category-title i {
-            margin-right: 10px;
-            color: #4a6cf7;
-        }
-        
-        .subcategories {
-            padding-left: 10px;
-        }
-        
-        .subcategory {
-            padding: 8px 15px;
-            margin: 5px 0;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-        }
-        
-        .subcategory i {
-            margin-right: 8px;
-            font-size: 0.9rem;
-            color: #4a6cf7;
-        }
-        
-        .subcategory:hover {
-            background: #f0f5ff;
-        }
-        
-        .subcategory.active {
-            background: #4a6cf7;
-            color: white;
-        }
-        
-        .subcategory.active i {
-            color: white;
-        }
-        
-        /* 主内容区 */
-        .content {
-            flex: 1;
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        .video-container {
+        .menu-item {
+            margin-bottom: 0.5rem;
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 比例 */
-            height: 0;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #000;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
         
-        .video-container video {
+        .menu-item > a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: var(--border-radius);
+            transition: all 0.2s ease;
+        }
+        
+        .menu-item > a:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .menu-item > a i {
+            margin-right: 0.75rem;
+            width: 1.25rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .menu-item.active > a {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .menu-item.active > a::after {
+            content: '';
+            position: absolute;
+            right: 1rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+        }
+        
+        .submenu {
+            list-style: none;
+            padding-left: 2.25rem;
+            display: none;
+            margin-top: 0.25rem;
+        }
+        
+        .submenu.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .submenu li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .submenu li a {
+            display: block;
+            padding: 0.5rem 1rem;
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-size: 0.95rem;
+            border-radius: var(--border-radius);
+            transition: all 0.2s ease;
+        }
+        
+        .submenu li a:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+            color: var(--primary-color);
+        }
+        
+        .submenu li.active a {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* 内容区域样式 */
+        .content {
+            grid-area: content;
+            padding: 2rem;
+            background-color: var(--white);
+            overflow-y: auto;
+        }
+        
+        .content-container {
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .video-container {
+            margin-bottom: 2rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .video-container.show {
+            display: block;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 比例 */
+            background-color: #000;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        
+        .video-player iframe {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            border: none;
+        }
+
+        .video-info {
+            padding: 1.5rem;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            margin-top: 1.5rem;
+        }
+        
+        .video-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+        }
+        
+        .video-info p {
+            color: var(--dark-gray);
+            font-size: 1rem;
+        }
+
+        /* 主页样式 */
+        .home-page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .home-page.show {
+            display: block;
+        }
+
+        .url-section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--medium-gray);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .url-section-title i {
+            margin-right: 0.75rem;
+        }
+
+        .url-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .url-card {
+            background-color: var(--white);
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .url-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-color: var(--accent-color);
+        }
+        
+        .url-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .url-card:hover i {
+            color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        
+        .url-card p {
+            margin: 0;
+            font-weight: 500;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        /* 名片区域样式 */
+        .cards-section {
+            grid-area: cards;
+            padding: 2rem 1.5rem;
+            background-color: var(--white);
+            border-left: 1px solid var(--medium-gray);
+            overflow-y: auto;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.05);
+        }
+        
+        .cards-container {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .card-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--medium-gray);
+            position: relative;
+        }
+        
+        .card-tab {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--dark-gray);
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        
+        .card-tab.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .card-tab:hover {
+            color: var(--primary-color);
+        }
+        
+        .card-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .card-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .card-container.show {
+            display: block;
+        }
+        
+        .card-scroll {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        
+        .card-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .card-scroll::-webkit-scrollbar-thumb {
+            background-color: var(--medium-gray);
+            border-radius: 3px;
+        }
+        
+        .card-scroll::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        .person-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--medium-gray);
+            transition: all 0.3s ease;
+        }
+        
+        .person-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .person-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .person-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
             object-fit: cover;
+            margin-right: 1rem;
+            border: 3px solid var(--light-gray);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .video-info h2 {
-            font-size: 1.6rem;
-            margin-bottom: 15px;
-            color: #2c3e50;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .person-info {
+            flex-grow: 1;
         }
         
-        .video-description {
-            color: #555;
-            margin-bottom: 15px;
-            line-height: 1.7;
-            padding: 15px;
-            background: #f9faff;
-            border-radius: 8px;
-            border-left: 3px solid #4a6cf7;
+        .person-name {
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-color);
+            font-size: 1.1rem;
         }
         
-        .video-meta {
-            display: flex;
-            gap: 20px;
-            color: #777;
+        .person-position {
+            color: var(--primary-color);
             font-size: 0.9rem;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
+            margin: 0.25rem 0 0;
+            font-weight: 500;
+        }
+
+        .person-details {
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            line-height: 1.6;
         }
         
-        .meta-item {
+        .person-details p {
+            margin: 0.5rem 0;
             display: flex;
             align-items: center;
-            gap: 6px;
         }
         
-        .meta-item i {
-            color: #4a6cf7;
+        .person-details i {
+            margin-right: 0.75rem;
+            width: 1.25rem;
+            color: var(--primary-color);
+            font-size: 1rem;
         }
         
+        .person-responsibility {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        /* 页脚样式 */
+        footer {
+            grid-area: footer;
+            text-align: center;
+            padding: 1.25rem;
+            background-color: var(--white);
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+            border-top: 1px solid var(--medium-gray);
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+        }
+        
+        footer p {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* 响应式设计 */
+        @media (max-width: 1200px) {
+            body {
+                grid-template-areas:
+                    "header header header"
+                    "sidebar content content"
+                    "footer footer footer";
+                grid-template-columns: 280px 1fr;
+            }
+            
+            .cards-section {
+                display: none;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
+            body {
+                grid-template-areas:
+                    "header header"
+                    "sidebar sidebar"
+                    "content content"
+                    "footer footer";
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto 1fr auto;
             }
             
             .sidebar {
-                flex: 1;
+                position: static;
                 width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--medium-gray);
+                max-height: 300px;
             }
             
-            .header {
-                height: 180px;
+            .content {
+                padding: 1.5rem;
             }
             
-            .header h1 {
-                font-size: 2rem;
+            .url-cards {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
-        }
-        
-        /* 页脚 */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 0.9rem;
-            max-width: 1200px;
-            margin: 20px auto 0;
-            border-top: 1px solid #eaeaea;
         }
     </style>
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- 标题区域 -->
-    <div class="header">
-        <h1><i class="fas fa-video"></i> 质控小课堂</h1>
-        <p>专业质量控制知识分享平台，助力质量提升</p>
-    </div>
-    
-    <div class="container">
-        <!-- 侧边目录 -->
-        <div class="sidebar">
-            <div class="sidebar-title">
-                <h2><i class="fas fa-book"></i> 课程目录</h2>
-            </div>
-            
-            <div class="category">
-                <div class="category-title">
-                    <i class="fas fa-flask"></i>
-                    <span>订单类</span>
-                </div>
-                <div class="subcategories">
-                    <div class="subcategory active" data-video="qc-intro">
-                        <i class="fas fa-play-circle"></i> 订单受理
-                    </div>
-                    <div class="subcategory" data-video="qc-tools">
-                        <i class="fas fa-play-circle"></i> 订单揽收
-                    </div>
-                    <div class="subcategory" data-video="iso-standards">
-                        <i class="fas fa-play-circle"></i> 订单仲裁
-                    </div>
-                </div>
-            </div>
-            
-            <div class="category">
-                <div class="category-title">
-                    <i class="fas fa-chart-line"></i>
-                    <span>工单类</span>
-                </div>
-                <div class="subcategories">
-                    <div class="subcategory" data-video="spc">
-                        <i class="fas fa-play-circle"></i> 上报标准
-                    </div>
-                    <div class="subcategory" data-video="six-sigma">
-                        <i class="fas fa-play-circle"></i> 仲裁标准
-                    </div>
-                    <div class="subcategory" data-video="data-analysis">
-                        <i class="fas fa-play-circle"></i> 处理时效
-                    </div>
-                </div>
-            </div>
-            
-            <div class="category">
-                <div class="category-title">
-                    <i class="fas fa-cogs"></i>
-                    <span>云呼类</span>
-                </div>
-                <div class="subcategories">
-                    <div class="subcategory" data-video="fmea">
-                        <i class="fas fa-play-circle"></i> 仲裁标准
-                    </div>
-                    <div class="subcategory" data-video="audit">
-                        <i class="fas fa-play-circle"></i> 呼入指引
-                    </div>
-                    <div class="subcategory" data-video="case-study">
-                        <i class="fas fa-play-circle"></i> 呼出指引
-                    </div>
-                </div>
-            </div>
-            
-            <div class="category">
-                <div class="category-title">
-                    <i class="fas fa-industry"></i>
-                    <span>损坏类</span>
-                </div>
-                <div class="subcategories">
-                    <div class="subcategory" data-video="medical">
-                        <i class="fas fa-play-circle"></i> 仲裁标准
-                    </div>
-                    <div class="subcategory" data-video="food">
-                        <i class="fas fa-play-circle"></i> 仲裁误区
-                    </div>
-                </div>
-            </div>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-chalkboard-teacher"></i>河北省区质控视频分享平台</h1>
         </div>
-        
-        <!-- 主内容区 -->
-        <div class="content">
-            <div class="video-container">
-                <video id="mainVideo" controls poster="poster.jpg"> <!-- 本地poster.jpg -->
-                    <source src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4" type="video/mp4"> <!-- 本地视频文件 -->
-                    您的浏览器不支持HTML5视频
-                </video>
-            </div>
+    </header>
+
+    <!-- 侧边栏目录区域 -->
+    <div class="sidebar">
+        <div class="sidebar-container">
+            <!-- 搜索框 -->
+            <input type="text" class="search-box" placeholder="搜索目录...">
             
-            <div class="video-info">
-                <h2><i class="fas fa-file-alt"></i> 订单讲解</h2>
-                <p class="video-description">
-                    本课程介绍订单类受理规则。
-                </p>
-                <div class="video-meta">
-                    <div class="meta-item">
-                        <i class="fas fa-clock"></i>
-                        <span>2分钟</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>2023-09-15</span>
-                    </div>
-                    <div class="meta-item">
-                        <i class="fas fa-eye"></i>
-                        <span>2,845次观看</span>
-                    </div>
-                </div>
-            </div>
+            <!-- 目录结构 -->
+            <ul class="menu">
+                <!-- 首页链接 -->
+                <li class="menu-item active" data-page="home">
+                    <a href="#"><i class="fas fa-home"></i> 首页</a>
+                </li>
+                
+                <!-- 一级目录1 - 视频教程 -->
+                <li class="menu-item">
+                    <a href="#"><i class="fas fa-play-circle"></i> 订单类</a>
+                    <!-- 二级目录 -->
+                    <ul class="submenu">
+                        <li><a href="#" data-video="video1">基础操作</a></li>
+                        <li><a href="#" data-video="video2">高级技巧</a></li>
+                        <li><a href="#" data-video="video3">常见问题</a></li>
+                        <li><a href="#" data-video="video4">案例分析</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 一级目录2 - 培训资料 -->
+                <li class="menu-item">
+                    <a href="#"><i class="fas fa-file-alt"></i> 工单类</a>
+                    <ul class="submenu">
+                        <li><a href="#" data-video="video5">操作手册</a></li>
+                        <li><a href="#" data-video="video6">安全规范</a></li>
+                        <li><a href="#" data-video="video7">质检标准</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 一级目录3 - 数据分析 -->
+                <li class="menu-item">
+                    <a href="#"><i class="fas fa-chart-bar"></i> 仲裁类</a>
+                    <ul class="submenu">
+                        <li><a href="#" data-video="video8">报表解读</a></li>
+                        <li><a href="#" data-video="video9">趋势分析</a></li>
+                        <li><a href="#" data-video="video10">KPI监控</a></li>
+                    </ul>
+                </li>
+                
+                <!-- 一级目录4 - 质量管理 -->
+                <li class="menu-item">
+                    <a href="#"><i class="fas fa-clipboard-check"></i> 理赔类</a>
+                    <ul class="submenu">
+                        <li><a href="#" data-video="video11">流程优化</a></li>
+                        <li><a href="#" data-video="video12">PDCA循环</a></li>
+                        <li><a href="#" data-video="video13">改进方案</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
-    </div>
-    
-    <div class="footer">
-        <p>© 2025 质控小课堂 | 专业质控视频分享平台 | 内部学习资料 | 禁止外传</p>
     </div>
 
+    <!-- 主要内容区域 -->
+    <div class="content">
+        <div class="content-container">
+            <!-- 主页内容 - 网址卡片 -->
+            <div class="home-page show" id="home-page">
+                <div class="url-section-title">
+                    <i class="fas fa-link"></i>常用网址入口
+                </div>
+                <div class="url-cards">
+                    <!-- 网址卡片1 -->
+                    <div class="url-card" onclick="window.open('https://www.sxjdfreight.com')">
+                        <i class="fas fa-globe"></i>
+                        <p>顺心官网</p>
+                    </div>
+                    
+                    <!-- 网址卡片2 -->
+                    <div class="url-card" onclick="window.open('https://oa.sxjdfreight.com')">
+                        <i class="fas fa-file-alt"></i>
+                        <p><div>顺心OA系统</div>
+						（直营员工）</p>
+                    </div>
+                    
+                    <!-- 网址卡片3 -->
+                    <div class="url-card" onclick="window.open('https://fsmail-ss.sf-express.com/#/myMailbox?lang=zh-CN')">
+                        <i class="fas fa-envelope"></i>
+                        <p><div>企业邮箱管理平台</div>
+						（直营员工）</p>
+                    </div>
+                    
+                    <!-- 网址卡片4 -->
+                    <div class="url-card" onclick="window.open('https://sxxb.sxjdfreight.com')">
+                        <i class="fas fa-book"></i>
+                        <p>顺心官方学习平台</p>
+                    </div>
+                    
+                    <!-- 网址卡片5 -->
+                    <div class="url-card" onclick="window.open('https://bi.sxjdfreight.com/v2/#/')">
+                        <i class="fas fa-chart-line"></i>
+                        <p><div>丰景台</div>
+						（直营员工）</p>
+                    </div>
+                    
+                    <!-- 网址卡片6 -->
+                    <div class="url-card" onclick="window.open('https://sxne.sxjdfreight.com')">
+                        <i class="fas fa-users"></i>
+                        <p>NE盟商门户网系统</p>
+                    </div>
+                    
+                    <!-- 网址卡片7 -->
+                    <div class="url-card" onclick="window.open('https://portal.sxjdfreight.com')">
+                        <i class="fas fa-user-tie"></i>
+                        <p><div>NE管理门户网系统</div>
+						（直营员工）</p>
+                    </div>
+                    
+                    <!-- 网址卡片8 -->
+                    <div class="url-card" onclick="window.open('https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4')">
+                        <i class="fas fa-file-contract"></i>
+                        <p>待增加</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 视频内容 - 默认隐藏 -->
+            <div class="video-container" id="video1">
+                <div class="video-player">
+                    <!-- 在这里修改视频URL -->
+                    <iframe src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>示例</h3>
+                    <!-- 在这里修改视频介绍 -->
+                    <p>本视频只是个示例，以下内容待建设。</p>
+                </div>
+            </div>
+            
+            <div class="video-container" id="video2">
+                <div class="video-player">
+                    <iframe src="https://www.example.com/videos/video2.mp4" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>高级技巧视频教程</h3>
+                    <p>本视频讲解系统的高级功能和快捷操作技巧，帮助用户提高工作效率，包括快捷键使用、批量操作、自定义设置等功能。</p>
+                </div>
+            </div>
+            
+            <!-- 在这里可以添加更多视频容器 -->
+            <!-- 复制上面的div.video-container结构，修改ID、视频URL和介绍内容即可 -->
+        </div>
+    </div>
+
+    <!-- 右侧名片区域 -->
+    <div class="cards-section">
+        <div class="cards-container">
+            <div class="card-tabs">
+                <div class="card-tab active" data-tab="area">区总</div>
+                <div class="card-tab" data-tab="quality">质控</div>
+                <div class="card-tab" data-tab="network">网管</div>
+                <div class="card-tab" data-tab="station">场站</div>
+            </div>
+            
+            <!-- 区总名片 -->
+            <div class="card-container show" id="area-cards">
+                <div class="card-scroll">
+                    <!-- 名片1 -->
+                    <div class="person-card">
+                        <div class="person-card-header">
+                            <!-- 在这里修改头像URL -->
+                            <img src="https://pic.nximg.cn/file/20190630/22902324_225854326001_2.jpg" alt="头像" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">梁博</h3>
+                                <p class="person-position">石家庄区域负责人</p>
+                            </div>
+                        </div>
+                        <div class="person-details">
+                            <p><i class="fas fa-phone"></i> 13800138001</p>
+                            <p><i class="fas fa-envelope"></i> zhang@example.com</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 石家庄栾城</p>
+                            <div class="person-responsibility">
+                                <p>负责石家庄区域网络团队建设。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 名片2 -->
+                    <div class="person-card">
+                        <div class="person-card-header">
+                            <img src="https://pic.nximg.cn/file/20190630/22902324_225854326001_2.jpg" alt="头像" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">王玉虎</h3>
+                                <p class="person-position">保沧区域负责人</p>
+                            </div>
+                        </div>
+                        <div class="person-details">
+                            <p><i class="fas fa-phone"></i> 13800138002</p>
+                            <p><i class="fas fa-envelope"></i> li@example.com</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 保定高阳</p>
+                            <div class="person-responsibility">
+                                <p>负责保沧区域网络团队建设。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 名片3 -->
+                    <div class="person-card">
+                        <div class="person-card-header">
+                            <img src="https://pic.nximg.cn/file/20190630/22902324_225854326001_2.jpg" alt="头像" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">杜小彬</h3>
+                                <p class="person-position">邢邯区域负责人</p>
+                            </div>
+                        </div>
+                        <div class="person-details">
+                            <p><i class="fas fa-phone"></i> 13800138003</p>
+                            <p><i class="fas fa-envelope"></i> wang@example.com</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 邢台</p>
+                            <div class="person-responsibility">
+                                <p>负责邢邯区域网络团队建设。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 质控名片 -->
+            <div class="card-container" id="quality-cards">
+                <div class="card-scroll">
+                    <!-- 名片1 -->
+                    <div class="person-card">
+                        <div class="person-card-header">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="头像" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">张晓东</h3>
+                                <p class="person-position">质控部负责人</p>
+                            </div>
+                        </div>
+                        <div class="person-details">
+                            <p><i class="fas fa-phone"></i> 13800138004</p>
+                            <p><i class="fas fa-envelope"></i> zhao@example.com</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 石家庄栾城</p>
+                            <div class="person-responsibility">
+                                <p>负责质控团队。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 名片2 -->
+                    <div class="person-card">
+                        <div class="person-card-header">
+                            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="头像" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">吴玲玲</h3>
+                                <p class="person-position">网服专员</p>
+                            </div>
+                        </div>
+                        <div class="person-details">
+                            <p><i class="fas fa-phone"></i> 13800138005</p>
+                            <p><i class="fas fa-envelope"></i> qian@example.com</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 石家庄栾城</p>
+                            <div class="person-responsibility">
+                                <p>负责保定区域网点异常处理。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+					<!-- 名片3 -->
+					<div class="person-card">
+					    <div class="person-card-header">
+					        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="头像" class="person-avatar">
+					        <div class="person-info">
+					            <h3 class="person-name">陈文文</h3>
+					            <p class="person-position">网服专员</p>
+					        </div>
+					    </div>
+					    <div class="person-details">
+					        <p><i class="fas fa-phone"></i> 13800138005</p>
+					        <p><i class="fas fa-envelope"></i> qian@example.com</p>
+					        <p><i class="fas fa-map-marker-alt"></i> 石家庄栾城</p>
+					        <div class="person-responsibility">
+					            <p>负责石家庄区域以及邢台宁晋网点异常处理。</p>
+					        </div>
+					    </div>
+					</div>
+					
+					<!-- 名片4 -->
+					<div class="person-card">
+					    <div class="person-card-header">
+					        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="头像" class="person-avatar">
+					        <div class="person-info">
+					            <h3 class="person-name">王乐坤</h3>
+					            <p class="person-position">网服专员</p>
+					        </div>
+					    </div>
+					    <div class="person-details">
+					        <p><i class="fas fa-phone"></i> 13800138005</p>
+					        <p><i class="fas fa-envelope"></i> qian@example.com</p>
+					        <p><i class="fas fa-map-marker-alt"></i> 石家庄栾城</p>
+					        <div class="person-responsibility">
+					            <p>负责沧州区域以及邯郸区域网点异常处理。</p>
+					        </div>
+					    </div>
+					</div>
+					
+					<!-- 名片5 -->
+					<div class="person-card">
+					    <div class="person-card-header">
+					        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="头像" class="person-avatar">
+					        <div class="person-info">
+					            <h3 class="person-name">张晓晓</h3>
+					            <p class="person-position">网服专员</p>
+					        </div>
+					    </div>
+					    <div class="person-details">
+					        <p><i class="fas fa-phone"></i> 13800138005</p>
+					        <p><i class="fas fa-envelope"></i> qian@example.com</p>
+					        <p><i class="fas fa-map-marker-alt"></i> 衡水</p>
+					        <div class="person-responsibility">
+					            <p>负责衡水区域以及邢台区域网点异常处理。</p>
+					        </div>
+					    </div>
+					</div>
+					
+					<!-- 名片3 -->
+					<div class="person-card">
+					    <div class="person-card-header">
+					        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="头像" class="person-avatar">
+					        <div class="person-info">
+					            <h3 class="person-name">黄立威</h3>
+					            <p class="person-position">营运质量管理专员</p>
+					        </div>
+					    </div>
+					    <div class="person-details">
+					        <p><i class="fas fa-phone"></i> 13800138005</p>
+					        <p><i class="fas fa-envelope"></i> qian@example.com</p>
+					        <p><i class="fas fa-map-marker-alt"></i> 石家庄栾城</p>
+					        <div class="person-responsibility">
+					            <p>负责质控部数据输出。</p>
+					        </div>
+					    </div>
+					</div>
+					
+                    <!-- 在这里可以添加更多质控名片 -->
+                </div>
+            </div>
+            
+            <!-- 网管名片 -->
+            <div class="card-container" id="network-cards">
+                <div class="card-scroll">
+                    <!-- 名片1 -->
+                    <div class="person-card">
+                        <div class="person-card-header">
+                            <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="头像" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">陈哲超</h3>
+                                <p class="person-position">网理</p>
+                            </div>
+                        </div>
+                        <div class="person-details">
+                            <p><i class="fas fa-phone"></i> 13800138006</p>
+                            <p><i class="fas fa-envelope"></i> sun@example.com</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 石家庄南</p>
+                            <div class="person-responsibility">
+                                <p>负责石家庄南加盟区网点。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 在这里可以添加更多网管名片 -->
+                </div>
+            </div>
+            
+            <!-- 场站名片 -->
+            <div class="card-container" id="station-cards">
+                <div class="card-scroll">
+                    <!-- 名片1 -->
+                    <div class="person-card">
+                        <div class="person-card-header">
+                            <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="头像" class="person-avatar">
+                            <div class="person-info">
+                                <h3 class="person-name">陈宏</h3>
+                                <p class="person-position">石家庄场站负责人</p>
+                            </div>
+                        </div>
+                        <div class="person-details">
+                            <p><i class="fas fa-phone"></i> 13800138007</p>
+                            <p><i class="fas fa-envelope"></i> zhou@example.com</p>
+                            <p><i class="fas fa-map-marker-alt"></i> 石家庄中转场</p>
+                            <div class="person-responsibility">
+                                <p>负责石家庄场站的日常运营管理，确保生产安全，提高工作效率。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 在这里可以添加更多场站名片 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>© 2025 质控小课堂 | 专业质控视频分享平台 | 内部学习资料 | 禁止外传</p>
+    </footer>
+
     <script>
-        // 视频数据
-        const videos = {
-            'qc-intro': {
-                title: "订单讲解",
-                description: "本课程介绍订单类受理规则。",
-                duration: "2分钟",
-                date: "2025-09-15",
-                views: "2,845",
-                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
-                poster: "poster.jpg"
-            },
-            'qc-tools': {
-                title: "订单揽收",
-                description: "本课程介绍订单类揽收规则。",
-                duration: "2分钟",
-                date: "2025-09-15",
-                views: "2,845",
-                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
-                poster: "poster.jpg"
-            },
-            'iso-standards': {
-                title: "订单仲裁",
-                description: "本课程介绍订单类仲裁规则。",
-                duration: "2分钟",
-                date: "2025-09-15",
-                views: "2,845",
-                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
-                poster: "poster.jpg"
-            },
-            'spc': {
-                title: "工单上报",
-                description: "本课程介绍工单上报规则。",
-                duration: "2分钟",
-                date: "2025-09-15",
-                views: "2,845",
-                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
-                poster: "poster.jpg"
-            },
-            'six-sigma': {
-                title: "仲裁标准",
-                description: "本课程介绍工单类仲裁标准规则。",
-                duration: "2分钟",
-                date: "2025-09-15",
-                views: "2,845",
-                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
-                poster: "poster.jpg"
-            },
-            'data-analysis': {
-                title: "处理时效",
-                description: "本课程介绍工单处理时效规则。",
-                duration: "2分钟",
-                date: "2025-09-15",
-                views: "2,845",
-                file: "https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/10/28/596bc8044e9921af60a770f0a35395c7.mp4",
-                poster: "poster.jpg"
-            }
-        };
-        
-        // 处理目录点击事件
-        document.querySelectorAll('.subcategory').forEach(item => {
-            item.addEventListener('click', function() {
-                // 移除所有active类
-                document.querySelectorAll('.subcategory').forEach(el => {
-                    el.classList.remove('active');
+        // 目录折叠功能
+        document.addEventListener('DOMContentLoaded', function() {
+            // 处理一级目录点击事件
+            document.querySelectorAll('.menu-item > a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const menuItem = this.closest('.menu-item');
+                    
+                    // 如果是首页项
+                    if (menuItem.hasAttribute('data-page')) {
+                        e.preventDefault();
+                        showHomePage();
+                        return;
+                    }
+                    
+                    // 阻止默认链接行为
+                    e.preventDefault();
+                    
+                    // 切换子菜单显示状态
+                    const submenu = menuItem.querySelector('.submenu');
+                    if (submenu) {
+                        submenu.classList.toggle('show');
+                    }
+                    
+                    // 设置活动状态
+                    setActiveMenuItem(menuItem);
                 });
-                
-                // 为当前点击项添加active类
-                this.classList.add('active');
-                
-                // 获取视频数据
-                const videoId = this.getAttribute('data-video');
-                const videoData = videos[videoId];
-                
-                if (videoData) {
-                    // 更新视频区域内容
-                    document.querySelector('.video-info h2').innerHTML = 
-                        `<i class="fas fa-file-alt"></i> ${videoData.title}`;
-                    document.querySelector('.video-description').textContent = videoData.description;
-                    
-                    // 更新视频元数据
-                    const metaItems = document.querySelectorAll('.meta-item');
-                    metaItems[0].innerHTML = `<i class="fas fa-clock"></i> <span>${videoData.duration}</span>`;
-                    metaItems[1].innerHTML = `<i class="fas fa-calendar-alt"></i> <span>${videoData.date}</span>`;
-                    metaItems[2].innerHTML = `<i class="fas fa-eye"></i> <span>${videoData.views}次观看</span>`;
-                    
-                    // 更新视频源
-                    const videoPlayer = document.getElementById('mainVideo');
-                    videoPlayer.src = videoData.file;
-                    videoPlayer.poster = videoData.poster;
-                    
-                    // 加载新视频
-                    videoPlayer.load();
-                }
             });
+            
+            // 二级目录点击事件
+            document.querySelectorAll('.submenu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // 阻止事件冒泡
+                    
+                    // 获取关联的视频ID
+                    const videoId = this.getAttribute('data-video');
+                    
+                    // 显示对应的视频
+                    showVideo(videoId);
+                    
+                    // 设置活动状态
+                    const menuItem = this.closest('.menu-item');
+                    setActiveMenuItem(menuItem);
+                    
+                    // 设置子菜单项为活动状态
+                    document.querySelectorAll('.submenu li').forEach(li => {
+                        li.classList.remove('active');
+                    });
+                    this.parentElement.classList.add('active');
+                });
+            });
+            
+            // 名片标签切换
+            document.querySelectorAll('.card-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有活动状态
+                    document.querySelectorAll('.card-tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    // 设置当前标签为活动状态
+                    this.classList.add('active');
+                    
+                    // 隐藏所有名片容器
+                    document.querySelectorAll('.card-container').forEach(container => {
+                        container.classList.remove('show');
+                    });
+                    
+                    // 显示选中的名片容器
+                    const tabId = this.getAttribute('data-tab');
+                    const targetContainer = document.getElementById(tabId + '-cards');
+                    if (targetContainer) {
+                        targetContainer.classList.add('show');
+                    }
+                });
+            });
+            
+            // 搜索功能
+            document.querySelector('.search-box').addEventListener('input', function() {
+                const searchText = this.value.toLowerCase();
+                
+                document.querySelectorAll('.menu-item a, .submenu a').forEach(link => {
+                    const linkText = link.textContent.toLowerCase();
+                    const menuItem = link.closest('.menu-item') || link.closest('li');
+                    
+                    if (searchText === '') {
+                        // 搜索框为空，显示所有项
+                        menuItem.style.display = '';
+                        
+                        // 如果是一级目录且有子菜单，保持原状态
+                        if (menuItem.classList.contains('menu-item') && menuItem.querySelector('.submenu')) {
+                            menuItem.querySelector('.submenu').classList.remove('show');
+                        }
+                    } else if (linkText.includes(searchText)) {
+                        // 匹配搜索词，显示该项
+                        menuItem.style.display = '';
+                        
+                        // 如果是子菜单项，展开父级菜单
+                        if (menuItem.parentElement.classList.contains('submenu')) {
+                            menuItem.parentElement.classList.add('show');
+                            menuItem.closest('.menu-item').style.display = '';
+                        }
+                    } else {
+                        // 不匹配，隐藏该项
+                        menuItem.style.display = 'none';
+                    }
+                });
+            });
+            
+            // 默认显示第一个视频
+            const hash = window.location.hash.substring(1);
+            if (hash && document.getElementById(hash)) {
+                document.getElementById('home-page').classList.remove('show');
+                document.getElementById(hash).classList.add('show');
+                
+                // 设置对应的菜单项为活动状态
+                const menuLink = document.querySelector(`.submenu a[data-video="${hash}"]`);
+                if (menuLink) {
+                    menuLink.closest('.menu-item').classList.add('active');
+                    menuLink.parentElement.classList.add('active');
+                    menuLink.closest('.submenu').classList.add('show');
+                }
+            }
         });
         
-        // 初始化视频播放器
-        const videoPlayer = document.getElementById('mainVideo');
-        videoPlayer.addEventListener('loadedmetadata', function() {
-            // 视频元数据加载完成
-        });
+        // 显示首页函数
+        function showHomePage() {
+            // 隐藏所有视频
+            document.querySelectorAll('.video-container').forEach(video => {
+                video.classList.remove('show');
+            });
+            
+            // 显示首页
+            document.getElementById('home-page').classList.add('show');
+            
+            // 移除所有活动状态
+            document.querySelectorAll('.menu-item').forEach(i => {
+                i.classList.remove('active');
+            });
+            
+            // 设置首页为活动状态
+            document.querySelector('[data-page="home"]').classList.add('active');
+            
+            // 关闭所有子菜单
+            document.querySelectorAll('.submenu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+        
+        // 显示视频函数
+        function showVideo(videoId) {
+            // 隐藏所有视频和首页
+            document.querySelectorAll('.video-container').forEach(video => {
+                video.classList.remove('show');
+            });
+            document.getElementById('home-page').classList.remove('show');
+            
+            // 显示选中的视频
+            if (videoId && document.getElementById(videoId)) {
+                document.getElementById(videoId).classList.add('show');
+            }
+        }
+        
+        // 设置活动菜单项函数
+        function setActiveMenuItem(menuItem) {
+            document.querySelectorAll('.menu-item').forEach(i => {
+                i.classList.remove('active');
+            });
+            menuItem.classList.add('active');
+        }
     </script>
 </body>
 </html>
