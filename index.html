@@ -1,3 +1,57 @@
+<script>
+// 计算字符串的SHA-256哈希值
+async function sha256(str) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    // 将哈希结果转换为十六进制字符串
+    return Array.from(new Uint8Array(hash))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+async function checkCode() {
+    const maxAttempts = 3;
+    let attempts = 0;
+    // 正确答案"BIANMA"的SHA-256哈希值
+    const correctHash = "88928a8e4eaa602fb600a71435cfc661a819302a7b125eacd7f959644c24e811";
+
+    while (attempts < maxAttempts) {
+        const input = prompt('河北省区的编码是:');
+        
+        // 如果用户点击取消，关闭页面
+        if (input === null) {
+            window.close();
+            return;
+        }
+        
+        // 计算输入内容的哈希并验证
+        try {
+            const inputHash = await sha256(input.trim());
+            if (inputHash === correctHash) {
+                alert('验证通过，欢迎访问！');
+                return; // 验证成功，退出函数
+            }
+        } catch (e) {
+            alert('验证过程出错，请重试');
+            continue;
+        }
+        
+        attempts++;
+        if (attempts < maxAttempts) {
+            // 显示剩余次数
+            prompt(`输入错误，剩余${maxAttempts - attempts}次机会`);
+        }
+    }
+    
+    // 超过最大尝试次数，关闭页面
+    alert('尝试次数过多，页面将关闭');
+    window.close();
+}
+
+// 初始化验证
+checkCode();
+</script>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -254,6 +308,113 @@
             color: var(--dark-gray);
             font-size: 1rem;
         }
+		
+		/* 图片画廊样式 */
+		.gallery-container {
+		    margin-bottom: 2rem;
+		    display: none;
+		    animation: fadeIn 0.5s ease;
+		}
+		
+		.gallery-container.show {
+		    display: block;
+		}
+		
+		.gallery-info {
+		    padding: 1.5rem;
+		    background-color: var(--light-gray);
+		    border-radius: var(--border-radius);
+		    margin-bottom: 1.5rem;
+		}
+		
+		.gallery-info h3 {
+		    font-size: 1.4rem;
+		    margin-bottom: 0.75rem;
+		    color: var(--text-color);
+		}
+		
+		.gallery-info p {
+		    color: var(--dark-gray);
+		    font-size: 1rem;
+		}
+		
+		.gallery-grid {
+		    display: grid;
+		    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+		    gap: 1.5rem;
+		}
+		
+		.gallery-item {
+		    background-color: var(--white);
+		    border-radius: var(--border-radius);
+		    overflow: hidden;
+		    box-shadow: var(--shadow);
+		    transition: transform 0.3s ease;
+		}
+		
+		.gallery-item:hover {
+		    transform: translateY(-5px);
+		}
+		
+		.gallery-item img {
+		    width: 100%;
+		    height: 200px;
+		    object-fit: cover;
+		    border-bottom: 1px solid var(--medium-gray);
+		}
+		
+		.gallery-item p {
+		    padding: 1rem;
+		    text-align: center;
+		    margin: 0;
+		    color: var(--text-color);
+		}
+		
+		.image-modal {
+		    display: none;
+		    position: fixed;
+		    z-index: 1000;
+		    padding-top: 50px;
+		    left: 0;
+		    top: 0;
+		    width: 100%;
+		    height: 100%;
+		    overflow: auto;
+		    background-color: rgba(0, 0, 0, 0.9);
+		}
+		
+		.modal-content {
+		    margin: auto;
+		    display: block;
+		    max-width: 90%;
+		    max-height: 80%;
+		}
+		
+		.modal-caption {
+		    margin: auto;
+		    display: block;
+		    width: 80%;
+		    max-width: 700px;
+		    text-align: center;
+		    color: #ccc;
+		    padding: 10px 0;
+		    height: 50px;
+		}
+		
+		.modal-close {
+		    position: absolute;
+		    top: 20px;
+		    right: 35px;
+		    color: #f1f1f1;
+		    font-size: 40px;
+		    font-weight: bold;
+		    transition: 0.3s;
+		    cursor: pointer;
+		}
+		
+		.modal-close:hover {
+		    color: #bbb;
+		}
 
         /* 主页样式 */
         .home-page {
@@ -562,7 +723,7 @@
     <div class="sidebar">
         <div class="sidebar-container">
             <!-- 搜索框 -->
-            <input type="text" class="search-box" placeholder="搜索目录...">
+            <input type="text" class="search-box" id="search-input" placeholder="搜索目录...">
             
             <!-- 目录结构 -->
             <ul class="menu">
@@ -589,11 +750,11 @@
                 
                 <!-- 一级目录2 - 培训资料 -->
                 <li class="menu-item">
-                    <a href="#"><i class="fas fa-file-alt"></i> 工单类</a>
+                    <a href="#"><i class="fas fa-file-alt"></i> 订单类</a>
                     <ul class="submenu">
-                        <li><a href="#" data-video="video2.1">操作手册</a></li>
-                        <li><a href="#" data-video="video2.2">安全规范</a></li>
-                        <li><a href="#" data-video="video2.3">质检标准</a></li>
+                        <li><a href="#" data-video="video2.1">建设中</a></li>
+                        <li><a href="#" data-video="video2.2">建设中</a></li>
+                        <li><a href="#" data-video="video2.3">建设中</a></li>
                     </ul>
                 </li>
                 
@@ -601,19 +762,20 @@
                 <li class="menu-item">
                     <a href="#"><i class="fas fa-chart-bar"></i> 仲裁类</a>
                     <ul class="submenu">
-                        <li><a href="#" data-video="video3.1">报表解读</a></li>
-                        <li><a href="#" data-video="video3.2">趋势分析</a></li>
-                        <li><a href="#" data-video="video3.3">KPI监控</a></li>
+                        <li><a href="#" data-video="video3.1">建设中</a></li>
+                        <li><a href="#" data-video="video3.2">建设中</a></li>
+                        <li><a href="#" data-video="video3.3">建设中</a></li>
                     </ul>
                 </li>
                 
                 <!-- 一级目录4 - 质量管理 -->
                 <li class="menu-item">
-                    <a href="#"><i class="fas fa-clipboard-check"></i> 理赔类</a>
+                    <a href="#"><i class="fas fa-clipboard-check"></i> 精选案例集</a>
                     <ul class="submenu">
-                        <li><a href="#" data-video="video4.1">流程优化</a></li>
-                        <li><a href="#" data-video="video4.2">PDCA循环</a></li>
-                        <li><a href="#" data-video="video4.3">改进方案</a></li>
+                        <li><a href="#" data-gallery="gallery4.1">工单类</a></li>
+                        <li><a href="#" data-gallery="gallery4.2">稽查类</a></li>
+                        <li><a href="#" data-gallery="gallery4.3">损坏类</a></li>
+						<li><a href="#" data-gallery="gallery4.4">建设中</a></li>
                     </ul>
                 </li>
             </ul>
@@ -765,7 +927,82 @@
 			        <p>盟商门户网-问题件回复/处理的系统操作视频。</p>
 			    </div>
 			</div>
-            <!-- 在这里可以添加更多视频容器 -->
+			
+			<!-- 在这里可以添加更多视频容器 -->
+			
+			<!-- 图片展示容器 - 新增内容 -->
+			<div class="gallery-container" id="gallery4.1">
+			    <div class="gallery-info">
+			        <h3>工单类案例</h3>
+			        <p>以下为工单类案例</p>
+			    </div>
+			    <div class="gallery-grid">
+			        <div class="gallery-item">
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/05/4060a830f05ea27d4b1eb36b5862310f.png" alt="云呼录音举证四害">
+			            <p>四害之云呼通话录音举证</p>
+			        </div>
+			        <div class="gallery-item">
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/05/d1313c84c9d19ae4dd412983d19a9c1f.png" alt="四害-提前签收">
+			            <p>四害-提前签收案例</p>
+			        </div>
+			        <div class="gallery-item">
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/05/1fb0783f80b8e7e188cfcafc66718df4.png" alt="重复投诉">
+			            <p>重复投诉案例</p>
+			        </div>
+			    </div>
+			</div>
+			
+			<div class="gallery-container" id="gallery4.2">
+			    <div class="gallery-info">
+			        <h3>稽查类案例</h3>
+			        <p>以下为偷重偷方、违禁品等稽查类案例</p>
+			    </div>
+			    <div class="gallery-grid">
+			        <div class="gallery-item">
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/05/e5c706982742af4856646e4d53dc39d5.png" alt="违禁品电池">
+			            <p>违禁品之电池收运</p>
+			        </div>
+			        <div class="gallery-item">
+			            <img src="https://via.placeholder.com/600x400?text=标准操作图2" alt="标准操作示例2">
+			            <p>待补充</p>
+			        </div>
+			        <div class="gallery-item">
+			            <img src="https://via.placeholder.com/600x400?text=标准操作图3" alt="标准操作示例3">
+			            <p>待补充</p>
+			        </div>
+			    </div>
+			</div>
+			
+			<div class="gallery-container" id="gallery4.3">
+			    <div class="gallery-info">
+			        <h3>损坏类案例</h3>
+			        <p>以下为关于损坏的一些案例，希望大家可以避免</p>
+			    </div>
+			    <div class="gallery-grid">
+			        <div class="gallery-item">
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/05/5ece49f56d18d0239dbd12cc6cff3224.png" alt="损坏异常签收">
+			            <p>损坏之异常签收案例</p>
+			        </div>
+			        <div class="gallery-item">
+			            <img src="https://via.placeholder.com/600x400?text=标准操作图2" alt="标准操作示例2">
+			            <p>待补充</p>
+			        </div>
+			        <div class="gallery-item">
+			            <img src="https://via.placeholder.com/600x400?text=标准操作图3" alt="标准操作示例3">
+			            <p>待补充</p>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- 在这里可以添加更多图片容器 -->
+			
+			<div class="image-modal" id="imageModal">
+			    <span class="modal-close">&times;</span>
+			    <img class="modal-content" id="modalImage">
+			    <div class="modal-caption" id="modalCaption"></div>
+			</div>
+			
+            <!-- 在这里可以添加放大器 -->
             <!-- 复制上面的div.video-container结构，修改ID、视频URL和介绍内容即可 -->
         </div>
     </div>
@@ -973,7 +1210,7 @@
                             <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="头像" class="person-avatar">
                             <div class="person-info">
                                 <h3 class="person-name">陈哲超</h3>
-                                <p class="person-position">网理</p>
+                                <p class="person-position">网管</p>
                             </div>
                         </div>
                         <div class="person-details">
@@ -1003,15 +1240,53 @@
                             </div>
                         </div>
                         <div class="person-details">
-                            <p><i class="fas fa-phone"></i> 13800138007</p>
-                            <p><i class="fas fa-envelope"></i> zhou@example.com</p>
+                            <p><i class="fas fa-phone"></i> 15230690188</p>
+                            <p><i class="fas fa-envelope"></i> chenhong646@sxjdfreight.com</p>
                             <p><i class="fas fa-map-marker-alt"></i> 石家庄中转场</p>
                             <div class="person-responsibility">
                                 <p>负责石家庄场站的日常运营管理，确保生产安全，提高工作效率。</p>
                             </div>
                         </div>
                     </div>
+					
+					<!-- 名片2 -->
+					<div class="person-card">
+					    <div class="person-card-header">
+					        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="头像" class="person-avatar">
+					        <div class="person-info">
+					            <h3 class="person-name">冯杰</h3>
+					            <p class="person-position">保定场站负责人</p>
+					        </div>
+					    </div>
+					    <div class="person-details">
+					        <p><i class="fas fa-phone"></i> 15010301044</p>
+					        <p><i class="fas fa-envelope"></i> fengjie832@sxjdfreight.com</p>
+					        <p><i class="fas fa-map-marker-alt"></i> 保定中转场</p>
+					        <div class="person-responsibility">
+					            <p>负责保定场站的日常运营管理，确保生产安全，提高工作效率。</p>
+					        </div>
+					    </div>
+					</div>
                     
+					<!-- 名片3 -->
+					<div class="person-card">
+					    <div class="person-card-header">
+					        <img src="https://randomuser.me/api/portraits/women/55.jpg" alt="头像" class="person-avatar">
+					        <div class="person-info">
+					            <h3 class="person-name">江大伟</h3>
+					            <p class="person-position">邯郸场站负责人</p>
+					        </div>
+					    </div>
+					    <div class="person-details">
+					        <p><i class="fas fa-phone"></i> 18632030274</p>
+					        <p><i class="fas fa-envelope"></i> jiangdawei828@sxjdfreight.com</p>
+					        <p><i class="fas fa-map-marker-alt"></i> 邯郸中转场</p>
+					        <div class="person-responsibility">
+					            <p>负责邯郸场站的日常运营管理，确保生产安全，提高工作效率。</p>
+					        </div>
+					    </div>
+					</div>
+					
                     <!-- 在这里可以添加更多场站名片 -->
                 </div>
             </div>
@@ -1020,7 +1295,7 @@
 
     <!-- 页脚 -->
     <footer>
-        <p>© 2025 质控小课堂 | 专业质控视频分享平台 | 内部学习资料 | 禁止外传</p>
+        <p>© 2025 质控小课堂 | 专业质控视频案例分享平台 | 内部学习资料 | 禁止外传 | 以上内容归河北省区质控部所有</p>
     </footer>
 
     <script>
@@ -1101,34 +1376,98 @@
                 });
             });
             
+			// 原有的菜单点击事件基础上增加对图片画廊的支持
+			document.querySelectorAll('.menu a[data-gallery]').forEach(link => {
+			    link.addEventListener('click', function(e) {
+			        e.preventDefault();
+			        
+			        // 隐藏所有内容
+			        document.querySelectorAll('.video-container, .home-page, .gallery-container').forEach(el => {
+			            el.classList.remove('show');
+			        });
+			        
+			        // 显示对应的图片画廊
+			        const galleryId = this.getAttribute('data-gallery');
+			        document.getElementById(galleryId).classList.add('show');
+			        
+			        // 更新菜单激活状态
+			        document.querySelectorAll('.menu-item, .submenu li').forEach(item => {
+			            item.classList.remove('active');
+			        });
+			        this.closest('li').classList.add('active');
+			        this.closest('.menu-item').classList.add('active');
+			    });
+			});
+			
+			// 确保首页和视频切换时隐藏图片画廊
+			document.querySelectorAll('.menu a[data-page], .menu a[data-video]').forEach(link => {
+			    link.addEventListener('click', function() {
+			        document.querySelectorAll('.gallery-container').forEach(el => {
+			            el.classList.remove('show');
+			        });
+			    });
+			});
+			
+			// 图片放大功能实现
+			const modal = document.getElementById('imageModal');
+			const modalImg = document.getElementById('modalImage');
+			const captionText = document.getElementById('modalCaption');
+			const closeBtn = document.querySelector('.modal-close');
+			
+			// 为所有画廊图片添加点击事件
+			document.querySelectorAll('.gallery-item img').forEach(img => {
+			    img.addEventListener('click', function() {
+			        modal.style.display = 'block';
+			        modalImg.src = this.src;
+			        captionText.textContent = this.alt;
+			    });
+			});
+			
+			// 点击关闭按钮关闭放大层
+			closeBtn.addEventListener('click', function() {
+			    modal.style.display = 'none';
+			});
+			
+			// 点击空白区域关闭放大层
+			modal.addEventListener('click', function(e) {
+			    if (e.target === modal) {
+			        modal.style.display = 'none';
+			    }
+			});
+			
             // 搜索功能
-            document.querySelector('.search-box').addEventListener('input', function() {
-                const searchText = this.value.toLowerCase();
+            document.getElementById('search-input').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                // 获取所有一级菜单和二级菜单的文本元素
+                const allMenuTexts = document.querySelectorAll('.menu > li > a, .menu .submenu > li > a');
                 
-                document.querySelectorAll('.menu-item a, .submenu a').forEach(link => {
-                    const linkText = link.textContent.toLowerCase();
-                    const menuItem = link.closest('.menu-item') || link.closest('li');
-                    
-                    if (searchText === '') {
-                        // 搜索框为空，显示所有项
-                        menuItem.style.display = '';
-                        
-                        // 如果是一级目录且有子菜单，保持原状态
-                        if (menuItem.classList.contains('menu-item') && menuItem.querySelector('.submenu')) {
-                            menuItem.querySelector('.submenu').classList.remove('show');
+                allMenuTexts.forEach(textEl => {
+                    const text = textEl.textContent.toLowerCase();
+                    const isMatch = text.includes(searchTerm);
+                    const currentLi = textEl.closest('li');
+                    const parentLi = currentLi.parentElement.closest('li'); // 可能是一级菜单的li（如果当前是二级）
+            
+                    // 处理匹配项
+                    if (isMatch) {
+                        // 显示当前项
+                        currentLi.style.display = '';
+                        // 如果是二级菜单的项，需要显示其父级一级菜单并展开子菜单
+                        if (parentLi && parentLi.querySelector('.submenu')) {
+                            parentLi.style.display = '';
+                            parentLi.querySelector('.submenu').classList.add('show');
                         }
-                    } else if (linkText.includes(searchText)) {
-                        // 匹配搜索词，显示该项
-                        menuItem.style.display = '';
-                        
-                        // 如果是子菜单项，展开父级菜单
-                        if (menuItem.parentElement.classList.contains('submenu')) {
-                            menuItem.parentElement.classList.add('show');
-                            menuItem.closest('.menu-item').style.display = '';
+                    } 
+                    // 处理非匹配项
+                    else if (searchTerm) {
+                        currentLi.style.display = 'none';
+                    } 
+                    // 搜索为空时恢复所有显示
+                    else {
+                        currentLi.style.display = '';
+                        // 恢复子菜单默认状态（如果有折叠逻辑）
+                        if (parentLi && parentLi.querySelector('.submenu')) {
+                            parentLi.querySelector('.submenu').classList.remove('show');
                         }
-                    } else {
-                        // 不匹配，隐藏该项
-                        menuItem.style.display = 'none';
                     }
                 });
             });
