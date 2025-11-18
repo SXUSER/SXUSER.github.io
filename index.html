@@ -10,6 +10,19 @@ async function sha256(str) {
         .join('');
 }
 
+/* 【新增弹窗控制函数 - 放在这里】 */
+// 显示公告弹窗
+function showAnnouncement() {
+    const modal = document.getElementById('announcementModal');
+    modal.style.display = 'flex';
+}
+
+// 隐藏公告弹窗
+function hideAnnouncement() {
+    const modal = document.getElementById('announcementModal');
+    modal.style.display = 'none';
+}
+
 async function checkCode() {
     const maxAttempts = 3;
     let attempts = 0;
@@ -30,6 +43,8 @@ async function checkCode() {
             const inputHash = await sha256(input.trim());
             if (inputHash === correctHash) {
                 alert('口令正确，欢迎访问！');
+				 // 【新增显示弹窗代码 - 放在这里】
+				setTimeout(showAnnouncement, 500); // 延迟500ms显示，提升体验
                 return; // 验证成功，退出函数
             }
         } catch (e) {
@@ -51,6 +66,14 @@ async function checkCode() {
 
 // 初始化验证
 checkCode();
+/* 【新增按钮事件绑定 - 放在这里】 */
+// 等待DOM加载完成后绑定事件（避免元素未加载的问题）
+document.addEventListener('DOMContentLoaded', function() {
+    const closeBtn = document.getElementById('closeAnnouncement');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', hideAnnouncement);
+    }
+});
 </script>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -768,6 +791,56 @@ checkCode();
             max-width: 1200px;
             margin: 0 auto;
         }
+		
+		/* 【新增弹窗样式 - 放在这里】 */
+		/* 公告弹窗样式 */
+		.announcement-modal {
+		    display: none; /* 默认隐藏 */
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    background-color: rgba(0, 0, 0, 0.7);
+		    z-index: 9999;
+		    justify-content: center;
+		    align-items: center;
+		    padding: 20px;
+		}
+		
+		.announcement-content {
+		    background-color: white;
+		    border-radius: var(--border-radius);
+		    max-width: 800px;
+		    width: 100%;
+		    max-height: 90vh;
+		    overflow-y: auto;
+		    position: relative;
+		    box-shadow: var(--shadow);
+		}
+		
+		.announcement-image {
+		    width: 100%;
+		    display: block; /* 确保图片填满容器 */
+		}
+		
+		.close-button {
+		    display: block;
+		    margin: 1.5rem auto;
+		    padding: 0.75rem 2rem;
+		    background-color: var(--primary-color);
+		    color: white;
+		    border: none;
+		    border-radius: var(--border-radius);
+		    font-size: 1rem;
+		    font-weight: 500;
+		    cursor: pointer;
+		    transition: background-color 0.3s ease;
+		}
+		
+		.close-button:hover {
+		    background-color: var(--secondary-color);
+		}
 
         /* 动画效果 */
         @keyframes fadeIn {
@@ -938,6 +1011,7 @@ checkCode();
 						<li><a href="#" data-gallery="gallery5.8">返货类手卡</a></li>
 						<li><a href="#" data-gallery="gallery5.9">派送类手卡</a></li>
 						<li><a href="#" data-gallery="gallery5.10">工单类手卡</a></li>
+						<li><a href="#" data-gallery="gallery5.11">VIP类手卡</a></li>
 				    </ul>
 				</li>
             </ul>
@@ -1364,6 +1438,14 @@ checkCode();
 			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/05/1fb0783f80b8e7e188cfcafc66718df4.png" alt="重复投诉">
 			            <p>重复投诉案例</p>
 			        </div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/405dd5479e5076f0140157896b3ed8b3.png" alt="不上楼">
+					    <p>四害-不上楼</p>
+					</div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/0d94f622d0e820c4c4575634b989b759.png" alt="拒派">
+					    <p>四害-拒派</p>
+					</div>
 			    </div>
 			</div>
 			
@@ -1399,13 +1481,41 @@ checkCode();
 			            <p>损坏之异常签收案例</p>
 			        </div>
 			        <div class="gallery-item">
-			            <img src="https://via.placeholder.com/600x400?text=标准操作图2" alt="标准操作示例2">
-			            <p>待补充</p>
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/30f9b2abb2d7eeabd8885366e446cbcb.png" alt="放指定位置">
+			            <p>损坏案例-放指定位置</p>
 			        </div>
 			        <div class="gallery-item">
-			            <img src="https://via.placeholder.com/600x400?text=标准操作图3" alt="标准操作示例3">
-			            <p>待补充</p>
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/f035061b7346d2f1bfd0347f4b660a6d.png" alt="非过夜上报不规范">
+			            <p>损坏案例-非过夜上报不规范</p>
 			        </div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/f679993cee7fc71e06294126302c2e59.png" alt="货物倒置">
+					    <p>损坏案例-货物倒置</p>
+					</div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/3ddf539fe16a820fd1451c2f6dfb12ef.png" alt="包装不合格">
+					    <p>损坏案例-包装不合格</p>
+					</div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/3f56018d18696e36d32dfeb8529a3fd4.png" alt="送货破损">
+					    <p>损坏案例-送货破损</p>
+					</div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/24710c240e142eacc7c6075b7c9ff0cd.png" alt="过夜上报不规范">
+					    <p>损坏案例-过夜上报不规范</p>
+					</div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/521e678a43faee10277c0fcad9bb6ff0.png" alt="提货未上报">
+					    <p>损坏案例-提货未上报</p>
+					</div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/93e9b7d52b8efdbc7eb7cfcfd6e50910.png" alt="违规踩货">
+					    <p>损坏案例-违规踩货</p>
+					</div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/685d4e75d1ef7cc242e5c7094e373511.png" alt="野蛮抛扔">
+					    <p>损坏案例-野蛮抛扔</p>
+					</div>
 			    </div>
 			</div>
 			
@@ -1544,7 +1654,10 @@ checkCode();
 			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/14/e431ac723b3bef09aeabd61df2c8f891.png" alt="上报要求">
 			            <p>损坏-上报要求</p>
 			        </div>
-					
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/8aa6d70741d87138bb9844e4ca782405.png" alt="定责逻辑">
+					    <p>损坏-定责逻辑</p>
+					</div>
 					<div class="gallery-item">
 					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/17/d8aca10b5324dada3d82ea83ef44005f.png" alt="违规操作界定标准">
 					    <p>损坏-违规操作界定标准</p>
@@ -1640,6 +1753,27 @@ checkCode();
 			    </div>
 			</div>
 			
+			<div class="gallery-container" id="gallery5.11">
+			    <div class="gallery-info">
+			        <h3>VIP类手卡</h3>
+			        <p>以下为关于VIP类手卡</p>
+			    </div>
+			    <div class="gallery-grid">
+			        <div class="gallery-item">
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/4353811ea79c9327015a4a0979000ef2.png" alt="VIP产品">
+			            <p>VIP产品</p>
+			        </div>
+					<div class="gallery-item">
+					    <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/3487e5eddcff88dc1e0b2176db50339a.png" alt="VIP客服">
+					    <p>VIP客服</p>
+					</div>
+			        <div class="gallery-item">
+			            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/a4b51ad87f576cee709ec7357c4fd57f.png" alt="VIP九牧卫浴">
+			            <p>VIP九牧卫浴</p>
+			        </div>
+			    </div>
+			</div>
+			
 			<!-- 在这里可以添加更多图片容器 -->
 			
 			<div class="image-modal" id="imageModal">
@@ -1657,7 +1791,15 @@ checkCode();
 			        <h3>迭代记录</h3>
 			        <div style="margin-top: 1rem; line-height: 1.8;">
 						
-						<p><strong>v3.3 (当前版本)</strong> - 2025/11/17</p>
+						<p><strong>v3.4 (当前版本)</strong> - 2025/11/18</p>
+						<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+						    <li>增加损坏类案例</li>
+							<li>增加VIP类手卡</li>
+							<li>增加轻松一刻</li>
+							<li>增加弹窗事件</li>
+						</ul>
+						
+						<p><strong>v3.3</strong> - 2025/11/17</p>
 						<ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
 						    <li>增加派送类仲裁标准</li>
 							<li>增加违规类界定标准</li>
@@ -2170,8 +2312,20 @@ checkCode();
 
     <!-- 页脚 -->
     <footer>
-        <p>© 2025 质控小课堂 | 专业质控视频案例分享平台 | 内部学习资料 | 禁止外传 | 轻松一刻 | 以上内容归河北省区质控部所有</p>
+        <p>© 2025 质控小课堂 | 专业质控视频案例分享平台 | 内部学习资料 | 禁止外传 | <a href=" https://sxuser.github.io/SXUSER1.github.io/" target="_blank" style="color: var(--primary-color); text-decoration: none;">轻松一刻</a> | 以上内容归河北省区质控部所有</p>
     </footer>
+	
+	<!-- 【新增弹窗HTML - 放在这里】 -->
+	    <!-- 公告弹窗 -->
+	    <div class="announcement-modal" id="announcementModal">
+	        <div class="announcement-content">
+	            <!-- 公告图片 - 替换为实际图片地址 -->
+	            <img src="https://outfilecdn-fusionwork.sf-express.com/v1.2/AUTH_FS-FT-BP/sfosspublic001/common/2025/11/18/ee19ff72b5bfc9fb228f21912f437411.png" alt="每日需注意事项" class="announcement-image">
+	            
+	            <!-- 关闭按钮 -->
+	            <button class="close-button" id="closeAnnouncement">我知道了</button>
+	        </div>
+	    </div>
 
     <script>
         // 目录折叠功能
